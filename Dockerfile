@@ -67,7 +67,7 @@ ENV CPU_COUNT=all
 RUN ulimit -n 2048
 
 COPY ./get-modules.pl /opt/scripts/get-modules.pl
-COPY ./buildscript.sh /opt/scripts/build.sh
+COPY ./build.sh /opt/scripts/build.sh
 
 RUN chmod -R 770 /opt/scripts/
 
