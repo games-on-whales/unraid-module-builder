@@ -61,7 +61,7 @@ RUN apt-get update \
 ENV OUTPUT_DIR=/output
 ENV UNRAID_VERSION=6.9.2
 ENV FORCE=false
-ENV UNRAID_DL_URL=https://s3.amazonaws.com/dnld.lime-technology.com/stable
+ENV UNRAID_DL_URL=https://unraid-dl.sfo2.cdn.digitaloceanspaces.com
 ENV CPU_COUNT=all
 
 RUN ulimit -n 2048
@@ -71,6 +71,5 @@ COPY ./build.sh /opt/scripts/build.sh
 
 RUN chmod -R 770 /opt/scripts/
 
-CMD [ "bash" ]
 ENTRYPOINT [ "/opt/scripts/build.sh" ]
 

@@ -86,6 +86,21 @@ function fetch() {
     cp "/cache/$file" "$dest"
 }
 
+function get_branch() {
+    local archive=$1
+
+    local d='[[:digit:]]'
+    local ver="$d+\.$d+\.$d+"
+    local tag="(alpha|beta|rc)$d+"
+
+    local branch=stable
+    if [[ $archive =~ -$ver-$tag- ]]; then
+        branch=next
+    fi
+
+    echo $branch
+}
+
 function fetch_unraid_img() {
     local version=$1
     local location=$2
@@ -106,14 +121,17 @@ function fetch_unraid_img() {
 
     local archive=unRAIDServer-${UNRAID_VERSION}-x86_64.zip
 
-    if fetch "$location/$archive" "$UNRAID_DL_URL/$archive" ; then
+    local branch=$(get_branch "$archive")
+    local download_url=$UNRAID_DL_URL/${branch:-stable}/$archive
+
+    if fetch "$location/$archive" "$download_url" ; then
         debug "Package downloaded"
     else
         error "Failed to download stock unRAID v${UNRAID_VERSION}, exiting"
         exit 1
     fi
 
-    unzip -o $location/unRAIDServer-${UNRAID_VERSION}-x86_64.zip bzroot\* bzfirmware\* &>/dev/null
+    unzip -o $location/$archive bzroot\* bzfirmware\* &>/dev/null
     # Don't need the -gui image
     rm -f bzroot-gui*
 
